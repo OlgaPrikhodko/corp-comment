@@ -1,6 +1,6 @@
 import { ChangeEvent, useState } from "react";
-import { MAX_CHARS } from "../lib/constants";
-import { useFeedbackItemsContext } from "../lib/hooks";
+import { MAX_CHARS } from "../../lib/constants";
+import { useFeedbackItemsContext } from "../../lib/hooks";
 
 export default function FeedbackForm() {
   const { handleAddToList } = useFeedbackItemsContext();
