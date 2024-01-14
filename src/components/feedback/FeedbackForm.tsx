@@ -5,6 +5,8 @@ import { useFeedbackItemsContext } from "../../lib/hooks";
 export default function FeedbackForm() {
   const { handleAddToList } = useFeedbackItemsContext();
   const [text, setText] = useState("");
+  const [showValidIndicator, setShowValidIndicator] = useState(false);
+  const [showInvalidIndicator, setShowInvalidIndicator] = useState(false);
 
   const charsLeft = MAX_CHARS - text.length;
 
@@ -18,12 +20,28 @@ export default function FeedbackForm() {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    // basic validation
+    if (text.includes("#") && text.length > 5) {
+      setShowValidIndicator(true);
+      setTimeout(() => setShowValidIndicator(false), 2000);
+    } else {
+      setShowInvalidIndicator(true);
+      setTimeout(() => setShowInvalidIndicator(false), 2000);
+
+      return;
+    }
     handleAddToList(text);
     setText(" ");
   };
 
   return (
-    <form onSubmit={handleSubmit} className="form">
+    <form
+      onSubmit={handleSubmit}
+      className={`form ${showValidIndicator ? "form--valid" : ""} ${
+        showInvalidIndicator ? "form--invalid" : ""
+      }`}
+    >
       <textarea
         value={text}
         onChange={handleChange}
