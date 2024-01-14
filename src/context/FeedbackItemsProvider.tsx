@@ -1,6 +1,9 @@
 import { ReactNode, createContext, useEffect, useState } from "react";
 import { FeedbackItemType } from "../lib/types";
 
+const URL =
+  "https://bytegrad.com/course-assets/projects/corpcomment/api/feedbacks";
+
 type FeedbackItemsContextType = {
   feedbackItems: FeedbackItemType[];
   setFeedbackItems: React.Dispatch<React.SetStateAction<FeedbackItemType[]>>;
@@ -20,23 +23,32 @@ export default function FeedbackItemsProvider({
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
-  const handleAddToList = (text: string) => {
-    const companyName = text
+  const handleAddToList = async (text: string) => {
+    const company = text
       .split(" ")
       .find((word) => word.includes("#"))
       ?.substring(1);
 
-    if (!companyName) return;
+    if (!company) return;
 
     const newItem: FeedbackItemType = {
       id: new Date().getTime(),
       upvoteCount: 0,
-      badgeLetter: companyName?.substring(0, 1).toUpperCase(),
-      companyName,
+      badgeLetter: company?.substring(0, 1).toUpperCase(),
+      company,
       text,
       daysAgo: 0,
     };
     setFeedbackItems([...feedbackItems, newItem]);
+
+    await fetch(URL, {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(newItem),
+    });
   };
 
   useEffect(() => {
@@ -44,9 +56,7 @@ export default function FeedbackItemsProvider({
       setIsLoading(true);
 
       try {
-        const response = await fetch(
-          "https://bytegrad.com/course-assets/projects/corpcomment/api/feedbacks"
-        );
+        const response = await fetch(URL);
 
         if (!response.ok) throw new Error("Something went wrong.");
 
