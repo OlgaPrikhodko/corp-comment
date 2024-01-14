@@ -10,9 +10,13 @@ type FeedbackItemsContextType = {
   isLoading: boolean;
   errorMessage: string;
   handleAddToList: (text: string) => void;
+  companyList: string[];
+  handleSelectCompany: (company: string) => void;
 };
 
-export const FeedbackItemsContext = createContext<FeedbackItemsContextType>({});
+export const FeedbackItemsContext = createContext<FeedbackItemsContextType>(
+  {} as FeedbackItemsContextType
+);
 
 export default function FeedbackItemsProvider({
   children,
@@ -22,6 +26,24 @@ export default function FeedbackItemsProvider({
   const [feedbackItems, setFeedbackItems] = useState<FeedbackItemType[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+
+  const [selectedCompany, setSelectedCompany] = useState("All");
+
+  const filteredFeedbackList =
+    selectedCompany === "All"
+      ? feedbackItems
+      : feedbackItems.filter(
+          (feedback) => feedback.company === selectedCompany
+        );
+
+  const companyList = [
+    "All",
+    ...new Set(feedbackItems.map((feedback) => feedback.company)),
+  ];
+
+  const handleSelectCompany = (company: string) => {
+    setSelectedCompany(company);
+  };
 
   const handleAddToList = async (text: string) => {
     const company = text
@@ -75,11 +97,13 @@ export default function FeedbackItemsProvider({
   return (
     <FeedbackItemsContext.Provider
       value={{
-        feedbackItems,
+        feedbackItems: filteredFeedbackList,
         setFeedbackItems,
         isLoading,
         errorMessage,
         handleAddToList,
+        companyList,
+        handleSelectCompany,
       }}
     >
       {children}
