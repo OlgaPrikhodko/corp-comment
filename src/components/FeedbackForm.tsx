@@ -1,7 +1,9 @@
 import { ChangeEvent, useState } from "react";
 import { MAX_CHARS } from "../lib/constants";
+import { useFeedbackItemsContext } from "../lib/hooks";
 
 export default function FeedbackForm() {
+  const { handleAddToList } = useFeedbackItemsContext();
   const [text, setText] = useState("");
 
   const charsLeft = MAX_CHARS - text.length;
@@ -14,8 +16,14 @@ export default function FeedbackForm() {
     setText(event.target.value);
   };
 
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    handleAddToList(text);
+    setText(" ");
+  };
+
   return (
-    <form className="form">
+    <form onSubmit={handleSubmit} className="form">
       <textarea
         value={text}
         onChange={handleChange}
