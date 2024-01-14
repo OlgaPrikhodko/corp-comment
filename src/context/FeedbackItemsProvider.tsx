@@ -14,9 +14,8 @@ type FeedbackItemsContextType = {
   handleSelectCompany: (company: string) => void;
 };
 
-export const FeedbackItemsContext = createContext<FeedbackItemsContextType>(
-  {} as FeedbackItemsContextType
-);
+export const FeedbackItemsContext =
+  createContext<FeedbackItemsContextType | null>(null);
 
 export default function FeedbackItemsProvider({
   children,
