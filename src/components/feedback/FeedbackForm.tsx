@@ -1,9 +1,11 @@
 import { ChangeEvent, useState } from "react";
 import { MAX_CHARS } from "../../lib/constants";
-import { useFeedbackItemsContext } from "../../lib/hooks";
 
-export default function FeedbackForm() {
-  const { handleAddToList } = useFeedbackItemsContext();
+export default function FeedbackForm({
+  onAddToList,
+}: {
+  onAddToList: (text: string) => void;
+}) {
   const [text, setText] = useState("");
   const [showValidIndicator, setShowValidIndicator] = useState(false);
   const [showInvalidIndicator, setShowInvalidIndicator] = useState(false);
@@ -31,7 +33,7 @@ export default function FeedbackForm() {
 
       return;
     }
-    handleAddToList(text);
+    onAddToList(text);
     setText(" ");
   };
 

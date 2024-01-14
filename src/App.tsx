@@ -6,8 +6,8 @@ import FeedbackItemsProvider from "./context/FeedbackItemsProvider";
 function App() {
   return (
     <div className="app">
+      <Footer />
       <FeedbackItemsProvider>
-        <Footer />
         <Container />
         <HashtagList />
       </FeedbackItemsProvider>
