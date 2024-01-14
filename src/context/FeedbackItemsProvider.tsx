@@ -1,4 +1,4 @@
-import { ReactNode, createContext, useEffect, useState } from "react";
+import { ReactNode, createContext, useEffect, useMemo, useState } from "react";
 import { FeedbackItemType } from "../lib/types";
 
 const URL =
@@ -29,17 +29,23 @@ export default function FeedbackItemsProvider({
 
   const [selectedCompany, setSelectedCompany] = useState("All");
 
-  const filteredFeedbackList =
-    selectedCompany === "All"
-      ? feedbackItems
-      : feedbackItems.filter(
-          (feedback) => feedback.company === selectedCompany
-        );
+  const filteredFeedbackList = useMemo(
+    () =>
+      selectedCompany === "All"
+        ? feedbackItems
+        : feedbackItems.filter(
+            (feedback) => feedback.company === selectedCompany
+          ),
+    [selectedCompany, feedbackItems]
+  );
 
-  const companyList = [
-    "All",
-    ...new Set(feedbackItems.map((feedback) => feedback.company)),
-  ];
+  const companyList = useMemo(
+    () => [
+      "All",
+      ...new Set(feedbackItems.map((feedback) => feedback.company)),
+    ],
+    [feedbackItems]
+  );
 
   const handleSelectCompany = (company: string) => {
     setSelectedCompany(company);
