@@ -1,5 +1,15 @@
+import Container from "./components/Container";
+import Footer from "./components/Footer";
+import HashtagList from "./components/HashtagList";
+
 function App() {
-  return <h1>Corp Comments</h1>;
+  return (
+    <div className="app">
+      <Footer />
+      <Container />
+      <HashtagList />
+    </div>
+  );
 }
 
 export default App;
